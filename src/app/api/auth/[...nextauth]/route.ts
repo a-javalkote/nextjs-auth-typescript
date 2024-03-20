@@ -4,6 +4,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
+const saltRounds = 10;
 const authOptions: any = {
   providers: [
     CredentialsProvider({
@@ -14,11 +15,10 @@ const authOptions: any = {
         try {
           await connectMongoDB();
           const userData = await user.findOne({ email });
-          console.log(userData);
           if (!userData) {
             return null;
           }
-          const checkPassword = bcrypt.compareSync(password, userData.password);
+          const checkPassword =  bcrypt.compareSync(password, userData.password);
           if (!checkPassword) {
             return null;
           }
